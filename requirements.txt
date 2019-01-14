@@ -1,0 +1,11 @@
+aiohttp==3.5.4
+async-timeout==3.0.1
+attrs==18.2.0
+chardet==3.0.4
+idna==2.8
+multidict==4.5.2
+pyTelegramBotAPI==3.6.6
+requests==2.7.0
+six==1.12.0
+tqdm==4.29.1
+yarl==1.3.0
