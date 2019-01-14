@@ -41,7 +41,7 @@ def load_music(message):
             return
 
         bot.send_message(message.chat.id, 'Загрузка плейлиста начата')
-        pl_maker = PlaylistMaker(VK_TOKEN)
+        pl_maker = PlaylistMaker()
         plist = pl_maker.create_playlist_file(id_)
         with open(plist) as json_file_playlist:
             playlist = json.loads(json_file_playlist.read())
