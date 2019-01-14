@@ -1,18 +1,19 @@
-from time import sleep
-from collections import OrderedDict
 import json
+from collections import OrderedDict
 from datetime import datetime
+from time import sleep
 from typing import Union
 
 import requests
+
+from config import Config
 
 # TODO Also save thumbnails of albums
 
 
 class PlaylistMaker:
 
-    def __init__(self, token: str) -> None:
-        self.token = token
+    token = Config.VK_TOKEN
 
     @staticmethod
     def group(lst: list, n: int):
@@ -34,11 +35,11 @@ class PlaylistMaker:
             song_id = song['id']
             song_ids.append(f'{user_id}_{song_id}_{access_key}')
 
-        splited_song_ids = self.group(song_ids, 200)  # Grouping ids because of VK API limits for songs in one request
+        split_songs_id = self.group(song_ids, 200)  # Grouping ids because of VK API limits for songs in one request
 
         result = OrderedDict()  # OrderedDict here and below is to specify order of songs like in a real playlist
 
-        for chunk in splited_song_ids:
+        for chunk in split_songs_id:
             # Making one request to get data for each 200 songs
             ids_for_request = ','.join(chunk)
             data = {'audios': ids_for_request, 'access_token': self.token, 'v': '5.85'}
@@ -58,8 +59,8 @@ class PlaylistMaker:
                     is_blocked = False
                 restricted_symbols = ['\\', '/', ':', '*', '"', '?', '<', '>', '|']
                 for symbol in restricted_symbols:
-                	author = author.replace(symbol, "")
-                	title = title.replace(symbol, "")
+                    author = author.replace(symbol, "")
+                    title = title.replace(symbol, "")
                 needed_data = OrderedDict(author=author, title=title, src=src, is_blocked=is_blocked)
                 result[id_] = needed_data
 

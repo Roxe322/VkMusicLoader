@@ -1,11 +1,13 @@
 import json
+import os
 
 import telebot
 
 from playlist_creator import PlaylistMaker
+from config import Config
 
-TG_TOKEN = '649956076:AAE7NKOUQDuBogSAidSkhGZpfqYF1yfdXfM'
-VK_TOKEN = '443da9309bc9d10369b77f5f02158c16663f6b00cdf6ee2c1176f1b1f71dc15d09115fa2dbdf7117949ba'
+TG_TOKEN = Config.TG_TOKEN
+VK_TOKEN = Config.VK_TOKEN
 bot = telebot.TeleBot(TG_TOKEN)
 HELP_TEXT = "Чтобы загрузить весь свой плейлист, напиши мне '/download VK_ID', где VK_ID - id твоей страницы " \
             "ВКонтакте. Аудиозаписи должны быть открыты."
@@ -14,21 +16,18 @@ HELP_TEXT = "Чтобы загрузить весь свой плейлист, �
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.send_message(message.chat.id, HELP_TEXT)
-    print(message)
-    print()
+    print(message,  end='\n\n')
 
 
 @bot.message_handler(commands=['help'])
 def show_help(message):
     bot.send_message(message.chat.id, HELP_TEXT)
-    print(message)
-    print()
+    print(message, end='\n\n')
 
 
 @bot.message_handler(commands=['download'])
 def load_music(message):
-    print(message)
-    print()
+    print(message, end='\n\n')
     if message.chat.type != 'private':
         bot.send_message(message.chat.id, 'Доступно только в приватном чате')
         return
@@ -49,6 +48,7 @@ def load_music(message):
             for song in playlist:
                 if song['src'] and not song['is_blocked']:
                     try:
+                        # Sync loading here to save order of music in bot dialog
                         bot.send_audio(message.chat.id, song['src'], caption=f"{song['author']} - {song['title']}",
                                        disable_notification=True)
                     except telebot.apihelper.ApiException:

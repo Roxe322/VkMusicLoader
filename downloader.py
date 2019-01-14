@@ -1,10 +1,10 @@
 import asyncio
 import json
 import os
-from typing import List, Coroutine, Dict, Union
+from typing import Coroutine, Dict, List, Union
 
-import tqdm
 import aiohttp
+import tqdm
 
 
 class Downloader:
@@ -21,7 +21,7 @@ class Downloader:
         for song in tqdm.tqdm(asyncio.as_completed(coros), total=len(coros), desc="Songs"):
             await song
 
-    async def download_file(self, song: Dict[str, Union[str, bool]]):
+    async def download_file(self, song: Dict[str, Union[str, bool]]) -> None:
         async with aiohttp.ClientSession() as session:
             async with self.semaphore, session.get(song['src']) as response:
                 song_bin = await response.read()
