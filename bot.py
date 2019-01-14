@@ -57,4 +57,5 @@ def load_music(message):
             bot.send_message(message.chat.id, 'Загрузка плейлиста окончена')
 
 
-bot.polling(none_stop=True, interval=5)
+if __name__ == '__main__':
+    bot.polling(none_stop=True, interval=5)
