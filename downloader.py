@@ -22,7 +22,7 @@ class Downloader:
             await song
 
     async def download_file(self, song: Dict[str, Union[str, bool]]) -> None:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
             async with self.semaphore, session.get(song['src']) as response:
                 song_bin = await response.read()
                 with open(f"{self.folder}/{self.playlist.index(song)+1}. {song['author']} - {song['title']}.mp3",
